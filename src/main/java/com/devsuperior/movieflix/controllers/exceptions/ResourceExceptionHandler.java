@@ -1,4 +1,4 @@
-package com.devsuperior.movieflix.resources.exceptions;
+package com.devsuperior.movieflix.controllers.exceptions;
 
 import java.time.Instant;
 
@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.devsuperior.movieflix.services.exceptions.DatabaseException;
 import com.devsuperior.movieflix.services.exceptions.ResourceNotFoundException;
+import com.devsuperior.movieflix.services.exceptions.UnauthorizedException;
 
 @ControllerAdvice
 public class ResourceExceptionHandler {
@@ -57,5 +58,11 @@ public class ResourceExceptionHandler {
 		
 		err.setPath(request.getRequestURI());
 		return ResponseEntity.status(status).body(err);
+	}
+	
+	@ExceptionHandler(UnauthorizedException.class)
+	public ResponseEntity<OAuthCustomError> unauthorized(UnauthorizedException e, HttpServletRequest request){
+		OAuthCustomError err = new OAuthCustomError("Unauthorized", e.getMessage());
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(err);
 	}
 }
